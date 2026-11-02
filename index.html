@@ -2778,12 +2778,22 @@ class Component extends DCLogic {
     const data = new FormData(f);
     data.append('elapsed', String(Math.round(performance.now())));
     this.setState({ sending: true, sendErr: false, sent: false });
-    const viaPhp = () => fetch('/contact.php', { method: 'POST', body: data, headers: { Accept: 'application/json' } })
-      .then((r) => r.json().catch(() => null).then((j) => {
+    const post = () => fetch('/contact.php', { method: 'POST', body: data, headers: { Accept: 'application/json' } }).then((r) => r.text().then((t) => [r, t]));
+    const viaPhp = () => post()
+      .then(([r, t]) => {
+        // the host's bot check answers with a script that sets a cookie and reloads: set it and try once more
+        const c = r.status === 409 && t.match(/document\.cookie\s*=\s*"([^"]+)"/);
+        if (!c) return [r, t];
+        document.cookie = c[1] + '; path=/';
+        return post();
+      })
+      .then(([r, t]) => {
+        let j = null;
+        try { j = JSON.parse(t); } catch (e) { /* not JSON: no PHP mailer here */ }
         if (r.ok && j && j.ok) return true;
         if (r.status === 422 || r.status === 429) throw new Error('refused');
         return false;
-      }));
+      });
     const viaRelay = () => {
       const v = (k) => String(data.get(k) || '').trim();
       const sel = f.elements.type;

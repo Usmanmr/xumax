@@ -776,6 +776,63 @@ a{color:#ff8f6b}a:hover{color:#ffb08f}
 @media (max-width:940px){.snd{margin-left:auto}}
 @media (max-width:420px){.hd-in{gap:8px}.brand{gap:8px}.hd .btn-sm{padding:0 10px}.snd{width:36px;height:36px;min-height:36px}.snd::before{content:"";position:absolute;inset:-5px}}
 @media (prefers-reduced-motion:reduce){.snd{display:none}}
+/* ---- mobile pass ---- */
+.xm section[id],.xm main [id]{scroll-margin-top:84px}
+.mnav-btn,.mnav,.swipe-hint{display:none}
+@media (max-width:940px){
+  .mnav-btn{display:grid;place-items:center;flex:none;width:44px;height:44px;border-radius:14px;border:1.5px solid var(--line2);background:rgba(5,5,42,.6);color:var(--fg);cursor:pointer}
+  .mnav-btn .ic{width:22px;height:22px}
+  .mnav-btn path{transition:transform .25s var(--ease-out),opacity .2s var(--ease-out);transform-box:fill-box;transform-origin:50% 50%}
+  .hd[data-menu="true"] .mnav-btn .mb1{transform:translateY(5px) rotate(45deg)}
+  .hd[data-menu="true"] .mnav-btn .mb2{opacity:0}
+  .hd[data-menu="true"] .mnav-btn .mb3{transform:translateY(-5px) rotate(-45deg)}
+  .hd .btn-sm{margin-left:auto}
+  .snd{margin-left:0}
+  .mnav{position:absolute;left:0;right:0;top:100%;padding:8px 16px 18px;background:#06052f;border-bottom:1px solid var(--line2);box-shadow:0 30px 50px -20px rgba(0,0,0,.8)}
+  .hd[data-menu="true"] .mnav{display:grid;gap:2px;animation:pop .2s var(--ease-out)}
+  .mnav a,.mnav-snd{display:flex;align-items:center;min-height:52px;padding:0 6px;font-family:'Fredoka',sans-serif;font-weight:500;font-size:21px;color:var(--fg);text-decoration:none;border-bottom:1px solid var(--line)}
+  .mnav-snd{width:100%;background:none;border:0;border-bottom:0;text-align:left;font-size:17px;color:var(--mut);cursor:pointer}
+  .ft nav a,.ft-more nav a{display:inline-flex;align-items:center;min-height:40px}
+  .ft nav,.ft-more nav{gap:0 18px}
+}
+@media (max-width:640px){
+  .hd-in{height:64px;gap:10px}
+  .hd .logo-mb,.hd .logo-mb svg{width:44px;height:44px}
+  .brand b{font-size:18px}
+  .sec{padding:64px 0}
+  .sh{margin-bottom:36px}
+  .sh p{font-size:17px}
+  /* hero chat: one message per row so they never cover each other */
+  .stage{height:600px}
+  .msg{max-width:84%;font-size:14.5px;padding:8px 12px}
+  .msg small{font-size:12px}
+  .msg time{font-size:12px}
+  .m0{left:14px;top:56px}.m1{right:14px;left:auto;top:136px}.m2{left:14px;top:222px}.m3{right:14px;left:auto;top:302px}
+  .joke{font-size:18px;bottom:88px}
+  /* problem cards: a swipeable row instead of eight tall cards */
+  .pgrid{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:6px 16px 14px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .pgrid::-webkit-scrollbar{display:none}
+  .pgrid .pcard{flex:0 0 84%;scroll-snap-align:center;min-height:250px}
+  .pgrid .pin{min-height:250px}
+  .face{padding:22px}
+  .face h3{font-size:22px}
+  .swipe-hint{display:flex;align-items:center;justify-content:center;gap:6px;margin:6px 0 0;font-size:14px;font-weight:800;color:var(--mut)}
+  .swipe-hint .ic{width:16px;height:16px}
+  /* the docked MaxBot is smaller and his bubble stays compact */
+  .bot.docked .bot-b{scale:.74;transform-origin:70% 90%}
+  .bot.docked .bub{max-width:min(240px,64vw);font-size:13.5px;top:6px}
+  .bot.docked[data-flip="1"] .bub{right:76px}
+}
+@media (max-width:420px){
+  .hd .snd{display:none}
+}
+@media (max-width:380px){
+  .brand > span:last-child{display:none}
+  .hero h1{font-size:38px}
+  .sh h2{font-size:31px}
+}
+@media (min-width:941px){.mnav{display:none!important}}
+
 /* ---- performance: loops only run where someone can see them ---- */
 /* --play inherits into <use> copies, so it pauses blinks and antennas inside shared symbols too */
 .xm *,.xm *::before,.xm *::after{animation-play-state:var(--play,running)!important}
@@ -1257,7 +1314,7 @@ a{color:#ff8f6b}a:hover{color:#ffb08f}
   </defs>
 </svg>
 
-<header class="hd" ref="{{ setHd }}">
+<header class="hd" ref="{{ setHd }}" data-menu="{{ menuOpen }}">
   <div class="wrap hd-in">
     <a class="brand" href="#top" data-tip="That’s us. The ‘interActive’ part means we answer back. Like me.">
       <span class="logo-mb" aria-hidden="true">
@@ -1310,7 +1367,16 @@ a{color:#ff8f6b}a:hover{color:#ffb08f}
     </nav>
     <button type="button" class="btn btn-gh snd" onClick="{{ toggleSound }}" aria-label="{{ soundLabel }}" aria-pressed="{{ soundPressed }}" data-on="{{ soundPressed }}"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"></path><path class="snd-on" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"></path><path class="snd-off" d="M16 9.5l5 5M21 9.5l-5 5"></path></svg></button>
     <a class="btn btn-or btn-sm" href="#contact" data-tip="This button books a free Problem Hunt. It does not book a dentist. Sorry.">Free Problem Hunt</a>
+    <button type="button" class="mnav-btn" onClick="{{ toggleMenu }}" aria-expanded="{{ menuOpen }}" aria-controls="xm-mnav" aria-label="{{ menuLabel }}"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path class="mb1" d="M4 7h16"></path><path class="mb2" d="M4 12h16"></path><path class="mb3" d="M4 17h16"></path></svg></button>
   </div>
+  <nav class="mnav" id="xm-mnav" aria-label="Menu" data-open="{{ menuOpen }}">
+    <a href="#problems" onClick="{{ closeMenu }}">Problems</a>
+    <a href="#how" onClick="{{ closeMenu }}">How it works</a>
+    <a href="#tools" onClick="{{ closeMenu }}">Tools</a>
+    <a href="#why" onClick="{{ closeMenu }}">Why xuMax</a>
+    <a href="#contact" onClick="{{ closeMenu }}">Contact</a>
+    <button type="button" class="mnav-snd" onClick="{{ toggleSound }}" aria-pressed="{{ soundPressed }}">{{ soundText }}</button>
+  </nav>
   <span class="prog" ref="{{ setProg }}"></span>
 </header>
 
@@ -1480,6 +1546,7 @@ a{color:#ff8f6b}a:hover{color:#ffb08f}
           </button>
         </sc-for>
       </div>
+        <p class="swipe-hint" aria-hidden="true">Swipe for more problems <svg class="ic" viewBox="0 0 24 24"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></p>
     </div>
   </section>
 
@@ -2258,7 +2325,7 @@ a{color:#ff8f6b}a:hover{color:#ffb08f}
           </div>
           <div class="fld"><label for="xm-name">Your name</label><input id="xm-name" name="name" autocomplete="name" placeholder="Ali Raza"></div>
           <div class="fld"><label for="xm-biz">Business name</label><input id="xm-biz" name="business" autocomplete="organization" placeholder="Your company or institution"></div>
-          <div class="fld"><label for="xm-contact">Email or WhatsApp number</label><input id="xm-contact" name="contact" autocomplete="email" placeholder="you@company.com or +92 300 1234567" data-tip="So we can actually reply. I promise not to send memes. Many memes."></div>
+          <div class="fld"><label for="xm-contact">Email or WhatsApp number</label><input id="xm-contact" name="contact" autocomplete="email" placeholder="you@company.com or WhatsApp" data-tip="So we can actually reply. I promise not to send memes. Many memes."></div>
           <div class="hp" aria-hidden="true"><label for="xm-site">Leave this empty</label><input id="xm-site" name="website" tabindex="-1" autocomplete="off"></div>
           <div class="fld"><label for="xm-type">Type of business</label>
             <div class="selw">
@@ -2438,7 +2505,7 @@ class Component extends DCLogic {
     super(props);
     let snd = false;
     try { snd = window.localStorage.getItem('xm-sound') === 'on'; } catch (e) { snd = false; }
-    this.state = { ind: 'hospital', calm: false, step: 0, flipped: {}, cat: 'all', seen: {}, tip: '', talk: false, docked: false, sent: false, mis: {}, toolSel: null, biz: '', ledge: '', peek: '', sound: snd, gmsg: '', sending: false, sendErr: false };
+    this.state = { ind: 'hospital', calm: false, step: 0, flipped: {}, cat: 'all', seen: {}, tip: '', talk: false, docked: false, sent: false, mis: {}, toolSel: null, biz: '', ledge: '', peek: '', sound: snd, gmsg: '', sending: false, sendErr: false, menu: false };
     this.soundOn = snd;
     this.setDrop = (el) => { this.drop = el; };
     this.setSplash = (el) => { this.splash = el; };
@@ -2595,7 +2662,7 @@ class Component extends DCLogic {
       if (!this.idleOn && performance.now() - this.actAt > 3000) this.setIdle(true);
       this.wake();
     }, 1000);
-    this.helloT = setTimeout(() => this.say('Hi! I’m MaxBot. Point at anything and I’ll tell you what I really think.', 5000), 1200);
+    this.helloT = setTimeout(() => this.say(fine ? 'Hi! I’m MaxBot. Point at anything and I’ll tell you what I really think.' : 'Hi! I’m MaxBot. Tap anything and I’ll tell you what I really think.', fine ? 5000 : 3500), 1200);
   }
 
   componentWillUnmount() {
@@ -2794,7 +2861,7 @@ class Component extends DCLogic {
     this.setState({ tip: text, talk: true });
     if (this.tipStart - this.babAt > 2000) { this.babAt = this.tipStart; this.sfx('babble'); }
     clearTimeout(this.hideT);
-    if (ms) this.hideT = setTimeout(() => { if (!this.cur) this.setState({ talk: false }); }, Math.max(ms, this.tipRT));
+    if (ms) this.hideT = setTimeout(() => { if (!this.cur) this.setState({ talk: false }); }, this.state.docked ? Math.min(ms, 4200) : Math.max(ms, this.tipRT));
   }
 
   quiet() {
@@ -3087,7 +3154,7 @@ class Component extends DCLogic {
         this.creaseOn = true;
       } else if (this.creaseOn) { this.creaseOn = false; this.crease.style.opacity = '0'; }
     }
-    if (now - this.last > 9000 && !this.state.talk && (this.mode === 'fly' || this.mode === 'perch')) {
+    if (now - this.last > 9000 && !this.state.talk && !this.state.docked && (this.mode === 'fly' || this.mode === 'perch')) {
       const idle = [
         'Psst. Hover over anything. I have opinions.',
         'Try the orange “xuMax it” button up top. Very satisfying.',
@@ -3709,6 +3776,10 @@ class Component extends DCLogic {
       },
       botCls: (s.talk ? 'talk ' : '') + (s.docked ? 'docked' : ''),
       sent: s.sent, sendErr: s.sendErr, sending: s.sending,
+      menuOpen: s.menu ? 'true' : 'false', menuLabel: s.menu ? 'Close menu' : 'Open menu',
+      toggleMenu: () => this.setState((st) => ({ menu: !st.menu })),
+      closeMenu: () => this.setState({ menu: false }),
+      soundText: s.sound ? 'Sound: on (tap to mute)' : 'Sound: off (tap to turn on)',
       submitLabel: s.sending ? 'Sending…' : 'Book my free Problem Hunt',
       gmsg: s.gmsg, gOn: s.gmsg ? '1' : '0',
       submit: (e) => {

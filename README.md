@@ -27,8 +27,11 @@ Changes made through Claude Code in this folder are rebuilt, committed and pushe
 
 ### One-time GitHub sign-in on this Mac
 
-1. On GitHub, create a fine-grained personal access token: Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token. Repository access: only `Usmanmr/xumax`. Permissions: **Contents: Read and write**.
-2. In Terminal, in this folder, run `git push -u origin main`.
-3. Username: `Usmanmr`. Password: paste the token.
+GitHub CLI is installed at `~/.local/bin/gh`. Sign in through the browser (works with a Google login, no password needed):
 
-macOS saves it in your Keychain, so every later push (including the automatic ones) works without asking.
+```bash
+~/.local/bin/gh auth login --hostname github.com --git-protocol https --web
+~/.local/bin/gh auth setup-git
+```
+
+Answer **Y** to “Authenticate Git with your GitHub credentials?”, press Enter to open the browser, and enter the one-time code it shows. After that every push, including the automatic ones, works without asking.

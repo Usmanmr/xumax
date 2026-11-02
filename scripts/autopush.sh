@@ -4,7 +4,7 @@
 # It never blocks Claude; it reports the result as a one-line message.
 
 cd "${CLAUDE_PROJECT_DIR:-$(dirname "$0")/..}" || exit 0
-export PATH="/usr/local/bin:/opt/homebrew/bin:$PATH"
+export PATH="$HOME/.local/bin:/usr/local/bin:/opt/homebrew/bin:$PATH"
 export GIT_TERMINAL_PROMPT=0
 LOG=.claude/autopush.log
 mkdir -p .claude

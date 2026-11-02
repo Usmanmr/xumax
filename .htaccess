@@ -9,6 +9,13 @@ RedirectMatch 404 ^/\.(git|build|claude)(/|$)
   Require all denied
 </FilesMatch>
 
+# the MaxWorkManager page lives in /mwm but has its own address: send xumax.site/mwm/ there
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^(www\.)?xumax\.site$ [NC]
+  RewriteRule ^mwm(/.*)?$ https://mwm.xumax.site$1 [R=301,L]
+</IfModule>
+
 # cache static files for a week; pages stay fresh
 <IfModule mod_expires.c>
   ExpiresActive On

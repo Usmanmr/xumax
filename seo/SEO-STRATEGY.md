@@ -174,6 +174,6 @@ What moves it further:
 - **The homepage is drawn by JavaScript** (the Design Component runtime). Google renders it, but some crawlers and AI tools only see the raw template. That's why the landing pages are plain HTML and the homepage links to all of them from its footer. If the homepage is rebuilt later, render the text into the HTML on the server.
 - **Mobile:** the homepage now has a mobile `viewport` tag, so phones use the mobile layout. Before, they showed the desktop layout zoomed out, and Google ranks sites on their mobile version.
 - **Images:** keep any new images under about 200 KB and give them descriptive `alt` text.
-- **After editing `index-v2.html` or the content:**
+- **After editing `index.html` or the content:**
   1. rerun `node seo/build.js` and re-upload `site/`
   2. update `lastmod` in `seo/config.js` when content changes meaningfully.

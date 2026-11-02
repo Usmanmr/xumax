@@ -1,4 +1,4 @@
-// Builds the upload-ready site into ../site: the homepage (index-v2.html), the SEO landing pages,
+// Builds the upload-ready site into ../site: the homepage (index.html), the SEO landing pages,
 // structured data, sitemap, robots.txt and llms.txt. Run: node seo/build.js
 const fs = require('fs');
 const path = require('path');
@@ -222,7 +222,7 @@ for (const c of combos) {
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 ${ld(home)}`;
-  let h = fs.readFileSync(path.join(ROOT, 'index-v2.html'), 'utf8');
+  let h = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
   const from = '<meta charset="utf-8">\n<title>xuMax interActive</title>';
   if (!h.includes(from)) throw new Error('homepage head changed; update the head injection in seo/build.js');
   h = h.replace(from, tags);

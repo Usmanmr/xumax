@@ -15,7 +15,7 @@ log() { echo "$(date '+%Y-%m-%d %H:%M:%S') $1" >> "$LOG"; }
 git rev-parse --git-dir >/dev/null 2>&1 || exit 0
 
 # rebuild the upload-ready site when its source changed
-if [ -n "$(git status --porcelain -- index-v2.html seo support.js vendor assets)" ]; then
+if [ -n "$(git status --porcelain -- index.html seo support.js vendor assets)" ]; then
   if ! out=$(node seo/build.js 2>&1); then
     log "build failed: $out"
     say "Auto-publish: the site build failed, so nothing was pushed. $(echo "$out" | tail -1)"

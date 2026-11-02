@@ -6,8 +6,8 @@ Source for **https://www.xumax.site**: the MaxBot homepage plus SEO landing page
 
 | Path | What it is |
 |---|---|
-| `index-v2.html` | The homepage (a Design Component: `<x-dc>` template + logic class). Edit this one. |
-| `index.html` | The previous homepage, kept for reference. Not deployed. |
+| `index.html` | The homepage (a Design Component: `<x-dc>` template + logic class). Edit this one. |
+| `archive/index-v1.html` | The previous homepage, kept for reference. Not deployed. |
 | `support.js`, `vendor/` | Runtime that renders the homepage. Don't edit. |
 | `assets/` | Uploaded media. |
 | `seo/` | SEO source: `config.js` (business details), `content.js` (all landing-page text), `build.js` (generator), `SEO-STRATEGY.md`. |
@@ -19,7 +19,7 @@ Source for **https://www.xumax.site**: the MaxBot homepage plus SEO landing page
 node seo/build.js
 ```
 
-Rebuilds `site/` from `index-v2.html` and `seo/`.
+Rebuilds `site/` from `index.html` and `seo/`.
 
 ## Automatic publishing
 

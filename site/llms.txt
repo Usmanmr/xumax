@@ -1,0 +1,39 @@
+# xuMax interActive
+
+> Easy custom-built AI tools for small and medium businesses. We build custom software and AI tools for small and medium businesses, highly customised around how each business already works: fixed price, live in weeks, zero training needed. Based in Pakistan; working with businesses in Pakistan, the UAE, Saudi Arabia, Qatar, Kuwait, Bahrain, Oman and the USA.
+
+## How a project runs
+
+- Problem Hunt: free 30-minute call
+- Audit: 1 week, three tool ideas with fixed prices
+- Prototype: 1 to 2 weeks, tested by real staff
+- Build & go live: a few weeks
+- Care plan: monthly hosting, fixes and small upgrades
+
+## Services
+
+- [Maintenance Management Software](https://www.xumax.site/services/maintenance-management-software/): MaxWorkManager: maintenance and complaint management software for hospitals, campuses, malls, housing and facility companies. Report by QR, fix with three buttons.
+- [Restaurant Ordering & Food Delivery App](https://www.xumax.site/services/restaurant-ordering-app/): Take food orders on WhatsApp and your own app, send them to a kitchen screen and update customers automatically. Built for restaurants, cloud kitchens and cafés.
+- [Hotel Housekeeping & Room Status App](https://www.xumax.site/services/hotel-housekeeping-app/): Live room status for hotels, resorts and marriage halls: dirty, cleaning, ready, out of order. Guest requests and maintenance issues never get forgotten.
+- [Clinic & Salon Appointment App](https://www.xumax.site/services/clinic-appointment-app/): An appointment assistant that books, confirms and reminds patients and clients on WhatsApp so no-shows stop eating your day. For clinics, dentists and salons.
+- [School Admissions & Enquiry Software](https://www.xumax.site/services/school-admissions-software/): Admissions Desk logs every enquiry, makes sure every parent is called back and tracks every seat through admission season. For schools, colleges and school groups.
+- [Factory Downtime Tracker](https://www.xumax.site/services/factory-downtime-tracker/): Know which line is down, who is fixing it and how long it really took. A downtime tracker for factories and industrial units, with shift reports from voice notes.
+- [Sales Rep Order App for Distributors](https://www.xumax.site/services/sales-order-app/): Reps take orders shop by shop on their phone: no paper, no lost slips, live stock. An order booking app for distributors and FMCG field teams.
+- [Gym & Club Member App](https://www.xumax.site/services/gym-member-app/): Check-ins by QR, renewal reminders and trainer bookings in one simple app for gyms, fitness studios and clubs.
+- [Websites & Scroll-Stopping Reels](https://www.xumax.site/services/websites-and-reels/): Fast, good-looking business websites and scroll-stopping reels for Instagram, TikTok and Facebook, from the team that builds your business tools.
+- [Custom Business Software & AI Tools](https://www.xumax.site/services/custom-business-software/): Custom-built software and AI tools for small and medium businesses: fixed price, live in weeks, zero training needed. Built around how you already work.
+
+## Where we work
+
+- [Pakistan](https://www.xumax.site/pakistan/): Custom maintenance, ordering, admissions and business apps for Pakistani SMEs in Lahore, Karachi, Islamabad and beyond. Fixed price, live in weeks, Urdu and English.
+- [UAE](https://www.xumax.site/uae/): Maintenance, food ordering, housekeeping and custom business apps for SMEs in Dubai, Abu Dhabi and Sharjah. Fixed price, live in weeks, built around your workflow.
+- [Saudi Arabia](https://www.xumax.site/saudi-arabia/): Maintenance management, restaurant ordering and custom apps for Saudi SMEs in Riyadh, Jeddah and Dammam. Fixed price, built around your workflow, live in weeks.
+- [Qatar](https://www.xumax.site/qatar/): Facility maintenance, restaurant ordering and custom business apps for SMEs in Doha and across Qatar. Fixed price, live in weeks, no per-user fees.
+- [Kuwait](https://www.xumax.site/kuwait/): Restaurant ordering, maintenance and custom business apps for SMEs in Kuwait City, Hawalli and Salmiya. Fixed price, live in weeks, built around your workflow.
+- [Bahrain](https://www.xumax.site/bahrain/): Maintenance, ordering and custom business apps for SMEs in Manama, Muharraq and Riffa. Fixed price, live in weeks, no per-user fees.
+- [Oman](https://www.xumax.site/oman/): Maintenance, hotel housekeeping, ordering and custom business apps for SMEs in Muscat, Sohar and Salalah. Fixed price, live in weeks.
+- [USA](https://www.xumax.site/usa/): Custom maintenance, ordering, booking and operations apps for US small and medium businesses. Fixed price, live in weeks, at a fraction of US agency cost.
+
+## Contact
+
+- Book a free Problem Hunt: https://www.xumax.site/#contact

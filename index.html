@@ -2703,15 +2703,36 @@ class Component extends DCLogic {
     return null;
   }
 
-  // the Problem Hunt form posts to contact.php on the host, which emails it to the inbox
+  // the Problem Hunt form posts to contact.php on the host, which emails it to the inbox;
+  // where that isn't available (no PHP, page opened as a file) it goes through the FormSubmit relay instead
   sendForm() {
     const f = this.formEl;
     if (!f || this.state.sending) return;
     const data = new FormData(f);
     data.append('elapsed', String(Math.round(performance.now())));
     this.setState({ sending: true, sendErr: false, sent: false });
-    fetch('/contact.php', { method: 'POST', body: data, headers: { Accept: 'application/json' } })
-      .then((r) => r.json().catch(() => ({})).then((j) => { if (!r.ok || !j.ok) throw new Error('not sent'); }))
+    const viaPhp = () => fetch('/contact.php', { method: 'POST', body: data, headers: { Accept: 'application/json' } })
+      .then((r) => r.json().catch(() => null).then((j) => {
+        if (r.ok && j && j.ok) return true;
+        if (r.status === 422 || r.status === 429) throw new Error('refused');
+        return false;
+      }));
+    const viaRelay = () => {
+      const v = (k) => String(data.get(k) || '').trim();
+      const sel = f.elements.type;
+      const type = sel && sel.value ? sel.options[sel.selectedIndex].text + (v('type_other') ? ': ' + v('type_other') : '') : '-';
+      const body = {
+        _subject: 'Problem Hunt request: ' + v('name') + (v('business') ? ' (' + v('business') + ')' : ''),
+        _template: 'table', _captcha: 'false', _honey: v('website'),
+        Name: v('name'), Business: v('business') || '-', 'Type of business': type, 'Email or WhatsApp': v('contact'), 'What’s driving them crazy': v('problem')
+      };
+      if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('contact'))) body._replyto = v('contact');
+      return fetch('https://formsubmit.co/ajax/usmanmr@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(body) })
+        .then((r) => r.json().catch(() => ({})).then((j) => { if (!r.ok || String(j.success) !== 'true') throw new Error(j.message || 'relay failed'); }));
+    };
+    viaPhp()
+      .catch((e) => { if (e.message === 'refused') throw e; return false; })
+      .then((ok) => (ok ? null : viaRelay()))
       .then(() => {
         f.reset();
         this.setState({ sending: false, sent: true, biz: '', peek: 'up' });

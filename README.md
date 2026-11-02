@@ -23,4 +23,12 @@ Rebuilds `site/` from `index-v2.html` and `seo/`.
 
 ## Automatic publishing
 
-Changes made through Claude Code in this folder are rebuilt, committed and pushed to `main` automatically at the end of each turn (see `.claude/settings.json` and `scripts/autopush.sh`).
+Changes made through Claude Code in this folder are rebuilt, committed and pushed to `main` automatically at the end of each turn (see `.claude/settings.json` and `scripts/autopush.sh`). A log of each run is kept in `.claude/autopush.log` (not committed).
+
+### One-time GitHub sign-in on this Mac
+
+1. On GitHub, create a fine-grained personal access token: Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token. Repository access: only `Usmanmr/xumax`. Permissions: **Contents: Read and write**.
+2. In Terminal, in this folder, run `git push -u origin main`.
+3. Username: `Usmanmr`. Password: paste the token.
+
+macOS saves it in your Keychain, so every later push (including the automatic ones) works without asking.

@@ -233,6 +233,7 @@ copy('vendor', 'vendor');
 copy('assets', 'assets');
 copy('seo/seo.css', 'css/seo.css');
 copy('seo/favicon.svg', 'favicon.svg');
+copy('server/contact.php', 'contact.php');
 for (const img of ['og-image.png', 'logo.png', 'apple-touch-icon.png', 'favicon.ico']) if (fs.existsSync(path.join(__dirname, img))) copy('seo/' + img, img);
 
 // ---------- robots, sitemap, llms.txt ----------

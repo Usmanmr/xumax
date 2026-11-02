@@ -274,6 +274,9 @@ a{color:#ff8f6b}a:hover{color:#ffb08f}
 .fld textarea{min-height:96px;resize:vertical}
 .fld input:focus,.fld textarea:focus{outline:none;border-color:var(--or);box-shadow:0 0 0 4px rgba(255,107,69,.22)}
 .note{padding:12px 14px;border-radius:14px;background:rgba(249,184,222,.14);color:var(--pink);font-weight:700;font-size:14px}
+.note-err{background:rgba(229,72,77,.18);color:#ffc2c4}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.form .btn[disabled]{opacity:.7;cursor:progress}
 
 /* footer */
 .ft{padding:56px 0 48px;border-top:1px solid var(--line);margin-top:110px}
@@ -2253,6 +2256,8 @@ a{color:#ff8f6b}a:hover{color:#ffb08f}
           </div>
           <div class="fld"><label for="xm-name">Your name</label><input id="xm-name" name="name" autocomplete="name" placeholder="Ali Raza"></div>
           <div class="fld"><label for="xm-biz">Business name</label><input id="xm-biz" name="business" autocomplete="organization" placeholder="Your company or institution"></div>
+          <div class="fld"><label for="xm-contact">Email or WhatsApp number</label><input id="xm-contact" name="contact" autocomplete="email" placeholder="you@company.com or +92 300 1234567" data-tip="So we can actually reply. I promise not to send memes. Many memes."></div>
+          <div class="hp" aria-hidden="true"><label for="xm-site">Leave this empty</label><input id="xm-site" name="website" tabindex="-1" autocomplete="off"></div>
           <div class="fld"><label for="xm-type">Type of business</label>
             <div class="selw">
               <select id="xm-type" name="type" onChange="{{ pickBiz }}" data-tip="Pick one. I have opinions about all of them. Strong ones.">
@@ -2279,9 +2284,12 @@ a{color:#ff8f6b}a:hover{color:#ffb08f}
             <div class="bizq" aria-live="polite"><b>MaxBot says</b><p class="q">{{ biz.quip }}</p><p class="f"><span>The xuMax fix:</span> {{ biz.fix }}</p></div>
           </sc-if>
           <div class="fld"><label for="xm-pain">What’s driving you crazy?</label><textarea id="xm-pain" name="problem" placeholder="Our orders get lost between WhatsApp and the kitchen…"></textarea></div>
-          <button type="submit" class="btn btn-or">Book my free Problem Hunt</button>
+          <button type="submit" class="btn btn-or" disabled="{{ sending }}" aria-busy="{{ sending }}">{{ submitLabel }}</button>
           <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
-            <p class="note">Preview page: this form isn’t connected yet. Link it to your inbox or WhatsApp [YOUR NUMBER] before launch.</p>
+            <p class="note" role="status">Got it! Your Problem Hunt request is on its way to our inbox. We’ll be in touch soon.</p>
+          </sc-if>
+          <sc-if value="{{ sendErr }}" hint-placeholder-val="{{ false }}">
+            <p class="note note-err" role="alert">That didn’t send. My cables are tangled. Please try again in a minute.</p>
           </sc-if>
         </form>
       </div>
@@ -2428,7 +2436,7 @@ class Component extends DCLogic {
     super(props);
     let snd = false;
     try { snd = window.localStorage.getItem('xm-sound') === 'on'; } catch (e) { snd = false; }
-    this.state = { ind: 'hospital', calm: false, step: 0, flipped: {}, cat: 'all', seen: {}, tip: '', talk: false, docked: false, sent: false, mis: {}, toolSel: null, biz: '', ledge: '', peek: '', sound: snd, gmsg: '' };
+    this.state = { ind: 'hospital', calm: false, step: 0, flipped: {}, cat: 'all', seen: {}, tip: '', talk: false, docked: false, sent: false, mis: {}, toolSel: null, biz: '', ledge: '', peek: '', sound: snd, gmsg: '', sending: false, sendErr: false };
     this.soundOn = snd;
     this.setDrop = (el) => { this.drop = el; };
     this.setSplash = (el) => { this.splash = el; };
@@ -2685,11 +2693,34 @@ class Component extends DCLogic {
     const f = this.formEl;
     if (!f || !f.elements) return null;
     const v = (n) => { const el = f.elements[n]; return el && el.value ? String(el.value).trim() : ''; };
-    const name = v('name'), pain = v('problem');
-    if (!name && !pain && !v('business') && !v('type')) return 'empty';
+    const name = v('name'), pain = v('problem'), reach = v('contact');
+    if (!name && !pain && !reach && !v('business') && !v('type')) return 'empty';
     if (!name) return 'name';
+    if (!reach) return 'contact';
     if (!pain) return 'problem';
     return null;
+  }
+
+  // the Problem Hunt form posts to contact.php on the host, which emails it to the inbox
+  sendForm() {
+    const f = this.formEl;
+    if (!f || this.state.sending) return;
+    const data = new FormData(f);
+    data.append('elapsed', String(Math.round(performance.now())));
+    this.setState({ sending: true, sendErr: false, sent: false });
+    fetch('/contact.php', { method: 'POST', body: data, headers: { Accept: 'application/json' } })
+      .then((r) => r.json().catch(() => ({})).then((j) => { if (!r.ok || !j.ok) throw new Error('not sent'); }))
+      .then(() => {
+        f.reset();
+        this.setState({ sending: false, sent: true, biz: '', peek: 'up' });
+        this.sfx('chime');
+        clearTimeout(this.peekT); this.peekT = setTimeout(() => this.setState({ peek: '' }), 2000);
+        this.say('Got it! Your Problem Hunt request is on its way. Usman reads every one.', 4200);
+      })
+      .catch(() => {
+        this.setState({ sending: false, sendErr: true });
+        this.say('My message got lost in the cables. Try again in a minute?', 4200);
+      });
   }
 
   // empty form: the desk MaxBot short-circuits and complains about it
@@ -2697,6 +2728,7 @@ class Component extends DCLogic {
     const Q = {
       empty: ['ERROR 404: words not found. I can’t book a Problem Hunt for an empty form.', 'Bzzzt. Blank form detected. My circuits were expecting at least one complaint.', 'Does not compute. Zero words in, zero Problem Hunts out. Please feed the robot.'],
       name: ['Who goes there? I can’t book a Problem Hunt for “Mystery Person”. Add your name.'],
+      contact: ['How do I reach you? I can’t reply by carrier pigeon. Add an email or WhatsApp number.'],
       problem: ['Nothing driving you crazy? Lucky you. Tell us anyway, I’m short-circuiting with curiosity.']
     };
     const opts = Q[miss] || Q.empty;
@@ -3653,16 +3685,14 @@ class Component extends DCLogic {
         else if (this.ac) { this.jetSound(0); this.ac.suspend(); }
       },
       botCls: (s.talk ? 'talk ' : '') + (s.docked ? 'docked' : ''),
-      sent: s.sent,
+      sent: s.sent, sendErr: s.sendErr, sending: s.sending,
+      submitLabel: s.sending ? 'Sending…' : 'Book my free Problem Hunt',
       gmsg: s.gmsg, gOn: s.gmsg ? '1' : '0',
       submit: (e) => {
         if (e && e.preventDefault) e.preventDefault();
         const miss = this.formMissing();
         if (miss) { this.malfunction(miss); return; }
-        this.setState({ sent: true, peek: 'up' });
-        this.sfx('chime');
-        clearTimeout(this.peekT); this.peekT = setTimeout(() => this.setState({ peek: '' }), 2000);
-        this.say('Got it! Well, I would have, if the form were connected. Soon.', 4200);
+        this.sendForm();
       },
       setBotSq: this.setBotSq, setBotSh: this.setBotSh, setCrease: this.setCrease, setDropSh: this.setDropSh, setLogoEyes: this.setLogoEyes, setScene: this.setScene, setLedge: this.setLedge, setRoot: this.setRoot, setFtLogo: this.setFtLogo,
       setBot: this.setBot, setBotBody: this.setBotBody, setEyes: this.setEyes, setProg: this.setProg, setSteps: this.setSteps, setHd: this.setHd,

@@ -1,12 +1,12 @@
-// Builds the upload-ready site into ../site: the homepage (index.html), the SEO landing pages,
-// structured data, sitemap, robots.txt and llms.txt. Run: node seo/build.js
+// Generates the SEO landing pages, sitemap, robots.txt and llms.txt into the website root, and refreshes
+// the SEO block in the homepage head (between the seo:start and seo:end markers). Run: node .build/seo/build.js
 const fs = require('fs');
 const path = require('path');
 const C = require('./config');
 const { services, markets, combos } = require('./content');
 
-const ROOT = path.join(__dirname, '..');
-const OUT = path.join(ROOT, 'site');
+const ROOT = path.join(__dirname, '..', '..');
+const OUT = ROOT;
 const D = C.domain.replace(/\/$/, '');
 const svc = Object.fromEntries(services.map((s) => [s.slug, s]));
 const mkt = Object.fromEntries(markets.map((m) => [m.slug, m]));
@@ -17,7 +17,6 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 const plain = (s) => String(s).replace(/<[^>]+>/g, '');
 const url = (p) => D + p;
 const write = (p, body) => { const f = path.join(OUT, p); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, body); };
-const copy = (from, to) => { const t = path.join(OUT, to); fs.mkdirSync(path.dirname(t), { recursive: true }); fs.cpSync(path.join(ROOT, from), t, { recursive: true }); };
 
 // ---------- structured data ----------
 const orgId = D + '/#org';
@@ -116,6 +115,9 @@ function foot() {
 `;
 }
 
+// generated folders are rebuilt from scratch so removed pages do not linger
+for (const d of ['services', 'where-we-work'].concat(markets.map((m) => m.slug))) fs.rmSync(path.join(OUT, d), { recursive: true, force: true });
+
 const pages = [];
 const page = (p, html) => { write(p.replace(/^\//, '') + 'index.html', html); pages.push(p); };
 
@@ -202,8 +204,7 @@ for (const c of combos) {
     { '@type': 'WebSite', '@id': D + '/#website', url: D + '/', name: C.name, alternateName: C.shortName, publisher: { '@id': orgId }, inLanguage: 'en' },
     { '@type': 'WebPage', '@id': D + '/', url: D + '/', name: t, description: d, isPartOf: { '@id': D + '/#website' }, about: { '@id': orgId } },
     { '@type': 'OfferCatalog', '@id': D + '/#services', name: 'xuMax tools', itemListElement: services.map((s) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: s.name, url: url('/services/' + s.slug + '/'), provider: { '@id': orgId } } })) }];
-  const tags = `<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  const tags = `<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(t)}</title>
 <meta name="description" content="${esc(d)}">
 <link rel="canonical" href="${D}/">
@@ -222,19 +223,13 @@ for (const c of combos) {
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 ${ld(home)}`;
-  let h = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
-  const from = '<meta charset="utf-8">\n<title>xuMax interActive</title>';
-  if (!h.includes(from)) throw new Error('homepage head changed; update the head injection in seo/build.js');
-  h = h.replace(from, tags);
-  write('index.html', h);
+  const file = path.join(ROOT, 'index.html');
+  const h = fs.readFileSync(file, 'utf8');
+  const m = h.match(/(<!-- seo:start[^>]*-->\n)[\s\S]*?(\n<!-- seo:end -->)/);
+  if (!m) throw new Error('index.html is missing the seo:start / seo:end markers');
+  const next = h.replace(m[0], m[1] + tags + m[2]);
+  if (next !== h) fs.writeFileSync(file, next);
 }
-copy('support.js', 'support.js');
-copy('vendor', 'vendor');
-copy('assets', 'assets');
-copy('seo/seo.css', 'css/seo.css');
-copy('seo/favicon.svg', 'favicon.svg');
-copy('server/contact.php', 'contact.php');
-for (const img of ['og-image.png', 'logo.png', 'apple-touch-icon.png', 'favicon.ico']) if (fs.existsSync(path.join(__dirname, img))) copy('seo/' + img, img);
 
 // ---------- robots, sitemap, llms.txt ----------
 write('robots.txt', `User-agent: *\nAllow: /\n\nSitemap: ${D}/sitemap.xml\n`);
@@ -247,4 +242,4 @@ write('llms.txt', `# ${C.name}\n\n> ${C.tagline} We build custom software and AI
   `## Where we work\n\n${markets.map((m) => `- [${mName(m)}](${url('/' + m.slug + '/')}): ${m.desc}`).join('\n')}\n\n` +
   `## Contact\n\n- Book a free Problem Hunt: ${D}/#contact\n${C.email ? '- Email: ' + C.email + '\n' : ''}${C.phone ? '- Phone: ' + C.phone + '\n' : ''}`);
 
-console.log('built', all.length, 'pages into', path.relative(ROOT, OUT) + '/');
+console.log('built', all.length, 'pages');

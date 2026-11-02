@@ -1,12 +1,3 @@
-# macOS
 .DS_Store
-
-# local test screenshots (large, regenerated on demand)
-screens/
-
-# working notes kept off the public repo
-MAXBOT_UPGRADE_PROMPT.md
-
-# Claude Code local settings and the auto-push log
 .claude/settings.local.json
 .claude/autopush.log

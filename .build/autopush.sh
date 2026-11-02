@@ -1,7 +1,7 @@
 #!/bin/bash
 # Runs at the end of every Claude Code turn (Stop hook in .claude/settings.json):
-# rebuilds site/ when the source changed, commits anything left uncommitted, and pushes main to GitHub.
-# It never blocks Claude; it reports the result as a one-line message.
+# regenerates the landing pages when their source changed, commits anything left uncommitted,
+# and pushes main to GitHub. It never blocks Claude; it reports the result as a one-line message.
 
 cd "${CLAUDE_PROJECT_DIR:-$(dirname "$0")/..}" || exit 0
 export PATH="$HOME/.local/bin:/usr/local/bin:/opt/homebrew/bin:$PATH"
@@ -14,11 +14,11 @@ log() { echo "$(date '+%Y-%m-%d %H:%M:%S') $1" >> "$LOG"; }
 
 git rev-parse --git-dir >/dev/null 2>&1 || exit 0
 
-# rebuild the upload-ready site when its source changed
-if [ -n "$(git status --porcelain -- index.html seo server support.js vendor assets)" ]; then
-  if ! out=$(node seo/build.js 2>&1); then
+# regenerate the landing pages when the homepage or their content changed
+if [ -n "$(git status --porcelain -- index.html .build/seo)" ]; then
+  if ! out=$(node .build/seo/build.js 2>&1); then
     log "build failed: $out"
-    say "Auto-publish: the site build failed, so nothing was pushed. $(echo "$out" | tail -1)"
+    say "Auto-publish: the page build failed, so nothing was pushed. $(echo "$out" | tail -1)"
     exit 0
   fi
 fi
@@ -42,7 +42,7 @@ if out=$(git push -u origin main 2>&1); then
 else
   log "push failed: $out"
   if echo "$out" | grep -qiE 'could not read Username|Authentication failed|403|denied'; then
-    say "Auto-publish: $ahead commit(s) are waiting, but GitHub refused the login. Sign in once (see README), and the next turn will push them."
+    say "Auto-publish: $ahead commit(s) are waiting, but GitHub refused the login. Run: ~/.local/bin/gh auth login --web"
   else
     say "Auto-publish: push to GitHub failed: $(echo "$out" | tail -1)"
   fi

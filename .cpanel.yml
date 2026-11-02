@@ -1,7 +1,0 @@
----
-# cPanel Git Version Control: "Deploy HEAD Commit" copies the website into public_html.
-# The cron job (.build/cpanel-deploy.sh) does the same automatically after every GitHub push.
-deployment:
-  tasks:
-    - export DEPLOYPATH=$HOME/public_html/
-    - tar --exclude=./.git --exclude=./.build --exclude=./.claude --exclude=./.cpanel.yml --exclude=./.gitignore -cf - . | tar -C $DEPLOYPATH -xf -

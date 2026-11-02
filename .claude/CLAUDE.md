@@ -6,4 +6,4 @@
 - `contact.php` emails Problem Hunt form submissions to usmanmr@gmail.com.
 - Publishing is automatic: the Stop hook (`.build/autopush.sh`) regenerates pages, commits leftovers and pushes `main` to https://github.com/Usmanmr/xumax at the end of every turn. The owner wants every change pushed.
 - Before ending a turn that changed files, commit them yourself with a descriptive message (ending with the Co-Authored-By trailer) so the history reads well; the hook then only pushes.
-- The owner does the cPanel deployment; `.build/cpanel-deploy.sh` and `.cpanel.yml` are ready for it.
+- Live hosting: HostGator cPanel (wp1118.hostgator.com). `public_html` is a cPanel Git Version Control checkout of this repo; a cron job runs `uapi VersionControl update` every 5 minutes, so anything pushed to `main` is live within about 5 minutes. HostGator answers a visitor's first POST with a 409 bot check that sets a `humans_*` cookie; the form handles it.
